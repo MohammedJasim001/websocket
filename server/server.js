@@ -4,9 +4,10 @@ import mongoose from 'mongoose'
 import regiser from './routes/routes.js'
 import http from 'http'
 import { Server } from 'socket.io'
+import bodyParser from 'body-parser'
 
 const app = express()
-app.use(express.json())
+app.use(bodyParser.json({ limit: "50mb" }))
 app.use(cors())
 mongoose.connect('mongodb://localhost:27017/socket')
         .then(()=>console.log('mongodb connected'))

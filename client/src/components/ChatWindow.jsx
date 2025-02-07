@@ -12,19 +12,34 @@ const ChatWindow = () => {
 
   const [message, setMessage] = useState("");
   const [newMessage, setnewMessage] = useState([]);
+  const [image, setImage] = useState(null)
 
   console.log(newMessage, "newMessage");
 
   // ✅ Function to send message
   const handleSendMessage = async () => {
-    if (!message.trim()) return;
+    if (!message.trim() && !image) return;
 
-    const msg = { sender: userId, receiver: Id, content: message };
+    const formData = new FormData();
+    formData.append("sender", userId);
+    formData.append("receiver", Id);
+    
+    if (message.trim()) {
+      formData.append("content", message); // ✅ Only append text if available
+    }
+
+    if (image) {
+      formData.append("image", image);
+    }
 
     try {
-      await sendeMessage(msg); 
-      socket.emit("send_message", msg); 
+      const response = await sendeMessage(formData); 
+      const sentMessage = response.data; 
 
+      socket.emit("send_message", sentMessage); 
+
+      // setnewMessage((prev) => [...prev, sentMessage]);
+      setImage(null);
       
       setMessage("");
     } catch (error) {
@@ -64,6 +79,12 @@ const ChatWindow = () => {
         {newMessage.map((msg, index) => (
           <li key={index}>
             <strong>{msg?.sender?._id === userId ? "You" : "Them"}:</strong> {msg.content}
+            {msg.image&&(
+              <img src={msg.image} 
+              alt="Sent"
+                style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "10px" }}
+              />
+            )}
           </li>
         ))}
       </ul>
@@ -72,6 +93,10 @@ const ChatWindow = () => {
         type="text"
         placeholder="Type a message..."
         onChange={(e) => setMessage(e.target.value)}
+      />
+      <input type="file" 
+      accept="image/*"
+      onChange={(e)=>setImage(e.target.files[0])}
       />
       <button onClick={handleSendMessage}>Send</button>
     </div>

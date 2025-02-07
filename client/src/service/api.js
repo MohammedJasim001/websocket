@@ -12,8 +12,10 @@ export const allUser = async (userId)=>{
     return res.data
 }
 
-export const sendeMessage = async(data)=>{
-    const res = await axios.post(`${url}/message`,data)
+export const sendeMessage = async(formData)=>{
+    const res = await axios.post(`${url}/message`,formData,{
+        headers:{"Content-Type":"multipart/form-data"}
+    })
     return res.data
 }
 

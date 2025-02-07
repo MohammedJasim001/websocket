@@ -10,7 +10,12 @@ const messageSchema = new mongoose.Schema({
         ref:'User'
     },
     content:{
-        type:String
+        type:String,
+        required:false
+    },
+    image: {
+        type:String,
+        required:false
     },
     isRead:{
         type:Boolean,
