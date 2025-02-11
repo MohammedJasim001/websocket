@@ -25,19 +25,38 @@ const io = new Server(server, {
     }
 })
 
-io.on('connection',(socket)=>{
-    console.log('user connected',socket.id)
+io.on('connection', (socket) => {
+    console.log('User connected', socket.id);
 
-    socket.on('send_message',(data)=>{
-        console.log(data)
-        // socket.broadcast.emit('receive_message',data)
-        io.emit('receive_message',data)
-    })
+    // ✅ Join a group chat room
+    socket.on('join_room', (room) => {
+        socket.join(room);
+        console.log(`User ${socket.id} joined room: ${room}`);
+    });
 
-    socket.on("disconnect",()=>{
-        console.log('user disconnected')
-    })
-})
+    // ✅ Handle group chat messages
+    socket.on('send_group_message', ({ sender, group, content }) => {
+        console.log(`Group message from ${sender} in ${group}: ${content}`);
+        io.to(group).emit('receive_group_message', { sender, content });
+    });
+
+    // ✅ Handle private (one-to-one) chat messages
+    socket.on('send_message', (data) => {
+        console.log(`Private message from ${data.sender} to ${data.receiver}: ${data.content}`);
+        io.emit('receive_message', data);
+    });
+
+    // ✅ Leave a room
+    socket.on('leave_room', (room) => {
+        socket.leave(room);
+        console.log(`User ${socket.id} left room: ${room}`);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected', socket.id);
+    });
+});
+
 
 
 server.listen(4000,()=>{

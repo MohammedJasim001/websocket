@@ -4,6 +4,7 @@ import LoginForm from './components/login'
 import { Route, Routes } from 'react-router-dom'
 import AllUsers from './components/AllUsers'
 import ChatWindow from './components/ChatWindow'
+import GroupChat from './components/groupMessage'
 
 export const UserData = createContext()
 
@@ -24,6 +25,7 @@ function App() {
       <Route path='/' element={<LoginForm/>}/>
       <Route path='/chat' element={<AllUsers/>}/>
       <Route path='/chat/:Id' element={<ChatWindow/>}/>
+      <Route path='/groupchat/:groupId' element = {<GroupChat/>}/>
      </Routes>
 
      </UserData.Provider>

@@ -33,3 +33,19 @@ export const getNotification = async (userId) =>{
     const res = await axios.get(`${url}/notification/${userId}`)
     return res.data
 }
+
+export const userIncludedGroups = async (userId) =>{
+    const res = await axios.get(`${url}/group/user/${userId}`)
+    return res.data
+}
+
+export const getGroupMessages = async (groupId) =>{
+    const res = await axios.get(`${url}/message/group/${groupId}`)
+    return res.data
+}
+
+export const sendGroupMessage = async (data) =>{
+    console.log(data,'data');
+    const res = await axios.post (`${url}/message/group/send`,data)
+    return res.data
+}
